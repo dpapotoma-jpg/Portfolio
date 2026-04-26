@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Didier | Étudiant BTS Pilotage de Procédés</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0d0d0d;
+            --accent: #00e676;
+            --text: #e0e0e0;
+            --text-dim: #9e9e9e;
+            --card-bg: #1a1a1a;
+            --border: #2a2a2a;
+        }
+
+        /* ── Grain background ── */
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* SVG grain overlay on the whole page */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.45;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 160px 160px;
+            mix-blend-mode: overlay;
+        }
+
+        /* Soft ambient green glow — top and bottom, very diffuse */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 70% 40% at 50% -5%, rgba(0, 230, 119, 0.546) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 30% at 80% 110%, rgba(0, 230, 230, 0.473) 0%, transparent 70%);
+        }
+
+        /* Make sure all content sits above the overlays */
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1, h2, h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 80px 0;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section:nth-child(1) { animation-delay: 0.1s; }
+        section:nth-child(2) { animation-delay: 0.2s; }
+        section:nth-child(3) { animation-delay: 0.3s; }
+        section:nth-child(4) { animation-delay: 0.4s; }
+        section:nth-child(5) { animation-delay: 0.5s; }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .hero::before {
+            display: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .name-accent {
+            color: var(--accent);
+            display: inline-block;
+            position: relative;
+        }
+
+        .hero .name-accent::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            animation: expandWidth 1s ease 0.6s forwards;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        @keyframes expandWidth {
+            to { transform: scaleX(1); }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            font-weight: 400;
+        }
+
+        .hero .tagline {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 32px;
+            padding: 16px 24px;
+            border: 1px solid var(--border);
+            display: inline-block;
+            background: rgba(0, 230, 118, 0.05);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            margin-bottom: 48px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::before {
+            content: '//';
+            color: var(--accent);
+            margin-right: 12px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        .skill-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .skill-level {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .skill-blocks {
+            display: flex;
+            gap: 4px;
+        }
+
+        .block {
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--accent);
+        }
+
+        .block.filled {
+            background: var(--accent);
+        }
+
+        .achievements-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .achievement-item {
+            background: var(--card-bg);
+            border-left: 3px solid var(--accent);
+            padding: 24px 28px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-item::before {
+            content: '▸';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 1.2rem;
+            background: var(--bg);
+        }
+
+        .achievement-item:hover {
+            background: rgba(0, 230, 118, 0.05);
+            transform: translateX(8px);
+        }
+
+        .achievement-item p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 32px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -45px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border: 3px solid var(--bg);
+            border-radius: 50%;
+        }
+
+        .timeline-item h3 {
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .timeline-item .period {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-bottom: 6px;
+            letter-spacing: 0.05em;
+        }
+
+        .timeline-item .school {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .timeline-item .timeline-desc {
+            font-size: 0.88rem;
+            color: #6a6a6a;
+            line-height: 1.6;
+        }
+
+        .timeline-item p {
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .contact {
+            text-align: center;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .contact p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            padding: 12px 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            border-color: var(--accent);
+            background: rgba(0, 230, 118, 0.05);
+        }
+
+        .contact-item svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--accent);
+        }
+
+        /* ── Réalisations cards (override style.css) ── */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 1.5rem;
+        }
+
+        .achievement-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 0;
+            padding: 20px 20px 16px 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            overflow: visible;
+            text-align: left;
+            user-select: none;
+        }
+
+        .achievement-card::before,
+        .achievement-card::after {
+            display: none; /* reset style.css pseudo-elements */
+        }
+
+        .achievement-card:hover,
+        .achievement-card:focus {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 230, 118, 0.12);
+            border-color: var(--accent);
+            background: rgba(0, 230, 118, 0.04);
+            outline: none;
+        }
+
+        .achievement-card h3 {
+            font-size: 0.98rem;
+            color: var(--text);
+            margin: 0 0 6px 0;
+            line-height: 1.4;
+        }
+
+        .achievement-card .card-summary {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0 0 14px 0;
+            line-height: 1.5;
+        }
+
+        /* "Voir le détail" chip at bottom */
+        .achievement-card .card-cta {
+            margin-top: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 0.04em;
+        }
+
+        .achievement-card .card-cta::after {
+            content: '→';
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .achievement-card:hover .card-cta::after,
+        .achievement-card:focus .card-cta::after {
+            transform: translateX(4px);
+        }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .modal-overlay.open {
+            display: flex;
+            animation: fadeOverlay 0.2s ease forwards;
+        }
+        @keyframes fadeOverlay {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            max-width: 560px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            animation: slideUp 0.25s ease forwards;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: var(--accent);
+        }
+        .modal-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--accent);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .modal h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .modal .modal-summary {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        .modal .modal-body {
+            color: var(--text-dim);
+            font-size: 0.97rem;
+            line-height: 1.7;
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px 8px;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--accent); }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: 80vh;
+            }
+
+            .timeline {
+                padding-left: 24px;
+            }
+
+            .timeline-item {
+                padding-left: 20px;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1><span class="name-accent">Didier</span></h1>
+                <p class="subtitle">Étudiant BTS Pilotage de Procédés (1ère année)<br>Lycée Louis Armand, Chambéry</p>
+                <p class="tagline">[ Électronique × Chimie × IoT × Automatisation ]</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="competences">
+        <div class="container">
+            <h2 class="section-title">Compétences</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Électronique & systèmes embarqués</h3>
+                    <p>Formation F2, Lpro GE, hands-on avec NodeMCU, Arduino UNO Q, Heltec WiFi LoRa 32 V4</p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Chimie & procédés industriels</h3>
+                    <p>Suivi des réactions chimiques , cinétique chimique, </p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Programmation</h3>
+                    <p>Flutter/Dart (app Windows de gestion de commandes), JavaScript (Tailwind CSS, vanilla JS), Node.js (Cloudflare Workers CORS proxy), Google Apps Script (automatisation e-commerce), Python (débutant)</p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>IoT & LoRaWAN / MQTT</h3>
+                    <p>Architecture LoRaWAN avec Heltec LoRa 32, broker Mosquitto, protocole MQTT, spreading factors, duty cycle, gateway centralisée, persistance locale SD card, zéro cloud</p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Automatisation & workflows</h3>
+                    <p>Make.com, n8n self-hosted exploration, automatisation e-commerce complète avec Apps Script + Google Docs/Drive/Gmail</p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Travail en laboratoire</h3>
+                    <p>Échangeurs thermiques (plaques, mono-tube, multi-tubes): efficacité ε, Δθml, NUT, coefficient h. Mécanique des fluides: conservation débit, pompes. Titrages. QHSSE.</p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Langues</h3>
+                    <p>Français (natif), Anglais (Intermédiaire)</p>
+                    <div class="skill-level">
+                        <div class="skill-blocks">
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block filled"></div>
+                            <div class="block"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal" id="modal">
+            <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+            <p class="modal-tag" id="modalTag"></p>
+            <h3 id="modalTitle"></h3>
+            <p class="modal-summary" id="modalSummary"></p>
+            <p class="modal-body" id="modalBody"></p>
+        </div>
+    </div>
+
+    <section id="realisations">
+        <div class="container">
+            <h2 class="section-title">Réalisations</h2>
+            <div class="achievements-list">
+                <div class="achievements-grid">
+                    <div class="achievement-card" tabindex="0" role="button"
+                        data-tag="Chimie · Concours"
+                        data-title="Lauréat (2e place) du concours de chimie VoCa 2026"
+                        data-summary="Distinction régionale — Lycée Louis Armand"
+                        data-body="Lauréat (2e place) du concours de chimie VoCa 2026 (Région Auvergne-Rhône-Alpes) : Distinction obtenue en catégorie universitaire au nom du Lycée Louis Armand.">
+                        <div>
+                            <h3>Lauréat (2e place) — VoCa 2026</h3>
+                            <p class="card-summary">Distinction régionale — Lycée Louis Armand</p>
+                            <span class="card-cta">Voir le détail</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" tabindex="0" role="button"
+                        data-tag="Flutter · Dart · Google Workspace"
+                        data-title="Logiciel de pilotage et gestion de commandes"
+                        data-summary="Outil de gestion et pilotage en temps réel"
+                        data-body="Développement d'un outil de gestion et de pilotage de flux synchronisé en temps réel avec l'écosystème Google Workspace (Sheets, Drive, Gmail). Interface native Windows construite avec Flutter/Dart.">
+                        <div>
+                            <h3>Logiciel de gestion (Flutter/Dart)</h3>
+                            <p class="card-summary">Outil de gestion et pilotage en temps réel</p>
+                            <span class="card-cta">Voir le détail</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" tabindex="0" role="button"
+                        data-tag="IoT · LoRaWAN · MQTT"
+                        data-title="Architecture de télémétrie sans fil LoRa (Multipoint)"
+                        data-summary="Réseau scalable pour suivi autonome"
+                        data-body="Déploiement d'un réseau scalable pour le suivi autonome de grandeurs physiques via le protocole MQTT. Transmission économe en énergie via LoRaWAN, spreading factors optimisés, persistance locale SD card, zéro cloud, faible impact écologique.">
+                        <div>
+                            <h3>Télémétrie LoRa multipoint</h3>
+                            <p class="card-summary">Réseau scalable pour suivi autonome</p>
+                            <span class="card-cta">Voir le détail</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" tabindex="0" role="button"
+                        data-tag="Node.js · Cloudflare Workers"
+                        data-title="Proxy de données sécurisé"
+                        data-summary="Proxy CORS sécurisé pour Google Workspace"
+                        data-body="Mise en œuvre d'une solution intermédiaire (Proxy CORS) via Node.js déployé sur Cloudflare Workers, sécurisant les flux de données externes vers l'écosystème Google Workspace sans exposer les clés d'API côté client.">
+                        <div>
+                            <h3>Proxy CORS (Node.js &amp; Cloudflare)</h3>
+                            <p class="card-summary">Proxy CORS sécurisé pour Google Workspace</p>
+                            <span class="card-cta">Voir le détail</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" tabindex="0" role="button"
+                        data-tag="Google Apps Script · E-commerce"
+                        data-title="Système d'automatisation E-commerce"
+                        data-summary="Workflow complet d'intégration et traitement"
+                        data-body="Développement d'un workflow complet pour l'intégration et le traitement automatisé de données e-commerce au sein de Google Workspace : génération de documents, envoi d'e-mails, mise à jour de Sheets, tout orchestré via Apps Script.">
+                        <div>
+                            <h3>Automatisation E-commerce (Apps Script)</h3>
+                            <p class="card-summary">Workflow complet d'intégration et traitement</p>
+                            <span class="card-cta">Voir le détail</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const overlay  = document.getElementById('modalOverlay');
+        const modalClose = document.getElementById('modalClose');
+
+        function openModal(card) {
+            document.getElementById('modalTag').textContent     = card.dataset.tag    || '';
+            document.getElementById('modalTitle').textContent   = card.dataset.title  || '';
+            document.getElementById('modalSummary').textContent = card.dataset.summary|| '';
+            document.getElementById('modalBody').textContent    = card.dataset.body   || '';
+            overlay.classList.add('open');
+            modalClose.focus();
+        }
+
+        function closeModal() {
+            overlay.classList.remove('open');
+        }
+
+        document.querySelectorAll('.achievement-card').forEach(card => {
+            card.addEventListener('click', () => openModal(card));
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card); }
+            });
+        });
+
+        modalClose.addEventListener('click', closeModal);
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+
+    <section id="formation">
+        <div class="container">
+            <h2 class="section-title">Formation</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <p class="period">2025 — En cours</p>
+                    <h3>BTS Pilotage de Procédés</h3>
+                    <p class="school">Lycée Louis Armand · Chambéry</p>
+                    <p class="timeline-desc">1ère année — Chimie industrielle, procédés, QHSSE, automatisation</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="period">Actuellement</p>
+                    <h3>Expérience professionnelle</h3>
+                    <p class="school">H2O Propreté · Chambéry</p>
+                    <p class="timeline-desc">Opérateur (temps partiel)</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="period">1 an</p>
+                    <h3>Licence Pro Génie Électrique</h3>
+                    <p class="school">Polytech Lomé · Togo</p>
+                    <p class="timeline-desc">Systèmes électriques et électroniques</p>
+                </div>
+                <div class="timeline-item">
+                    <p class="period">Obtenu</p>
+                    <h3>Baccalauréat série F2</h3>
+                    <p class="school">Spécialité Électronique</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="section-title">Contact</h2>
+                <p>Disponible pour des opportunités de stage et de collaboration</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        <span>Chambéry, France</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        <span>papotomadidieressodewa@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                        <span>Lycée Louis Armand</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
