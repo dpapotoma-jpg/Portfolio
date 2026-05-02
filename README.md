@@ -1,57 +1,32 @@
-# Portfolio — Didier
+# Didier Papotoma — Portfolio
 
-Site personnel présentant compétences, réalisations et contact.
+**Étudiant en Pilotage de Procédés**  
+Site personnel mettant en avant mes compétences, réalisations et parcours.
 
-## Structure du projet
-- `index.html` : page principale (HTML + CSS + JS). Sections : Compétences, Réalisations, Formation, Contact.
-- `public/phone-hero.svg` : bannière optimisée pour mobile.
+![Aperçu du Portfolio](https://didiers-portfolio.vercel.app/) <!-- Remplace par un vrai screenshot si tu veux -->
 
-## Changements récents
-- Mise à jour des cartes/accordéon **Compétences**.
-- Ajout d'une image mobile (`public/phone-hero.svg`).
-- Correction de l'axe de la timeline pour que la ligne traverse les marqueurs.
+## 🌟 À propos
 
-## Modifier la section "Compétences"
-La section se trouve dans `index.html`. Selon la version actuelle il y a deux variantes :
+Portfolio moderne et responsive conçu pour présenter mon profil d'étudiant en **Pilotage de Procédès**.  
+Design sombre élégant avec des animations fluides, entièrement codé en HTML, CSS et JavaScript vanilla.
 
-- Cartes interactives (`.sk-grid`) : éditez les titres et listes dans les blocs `div.sk-card`.
-- Accordéon (ancienne variante) : éditez les `button.accordion-btn` et `div.accordion-body`.
+### Lien du site
+**[Voir le portfolio en ligne →](https://didiers-portfolio.vercel.app/)**
 
-Pour mettre à jour rapidement les textes, ouvrez `index.html` et modifiez le contenu HTML correspondant, puis enregistrez.
+## ✨ Fonctionnalités
 
-## Lancer en local
-1. Ouvrir `index.html` dans un navigateur (double‑clic) pour une visualisation statique.
-2. Optionnel — servir via npm `http-server` ou `live-server` pour rechargement automatique :
+- **Design moderne** avec effet grain et gradients subtils
+- **Totalement responsive** (mobile-first)
+- **Cartes de compétences interactives** (hover/flip)
+- **Section Réalisations** avec modales détaillées
+- **Timeline de formation** claire et visuelle
+- **Performant** : Single Page sans framework lourd
+- **SEO friendly** et accessible
 
-```bash
-# exemple avec http-server (npm)
-npm install -g http-server
-http-server . -c-1
-```
-
-Ouvrir ensuite `http://localhost:8080`.
-
-## Processus de contribution
-1. Créez une branche feature/nom (optionnel).
-2. Faites vos modifications locales.
-3. Committez avec un message clair.
-4. Poussez sur `main` (ou soumettez une PR si vous utilisez une branche).
-
-Commandes utiles :
+## 🛠 Structure du projet
 
 ```bash
-git checkout -b feature/ma-modif
-git add -A
-git commit -m "Description de la modif"
-git push origin feature/ma-modif
-```
-
-## Déploiement
-Ce projet est une simple page statique — vous pouvez la déployer sur GitHub Pages, Netlify ou Cloudflare Pages.
-
-## Licence
-Ajoutez ici la licence souhaitée (ex : MIT) si vous souhaitez en spécifier une.
-
-## Contact
-Didier — papotomadidieressodewa@gmail.com
-
+Portfolio/
+├── index.html          # Fichier principal (tout le site)
+├── README.md
+└── .gitignore
